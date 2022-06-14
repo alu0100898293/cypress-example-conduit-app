@@ -98,7 +98,7 @@ workflows:
           parallelism: 2
           no-workspace: true
           start: npm run start:coverage
-          wait-on: http://localhost:4100
+          wait-on: http://34.175.139.91:80
           record: true
           post-steps:
             - store_artifacts:

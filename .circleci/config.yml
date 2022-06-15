@@ -111,11 +111,17 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - gcr/build-image:
-          image: circle-gke
+          image: server-app
+          tag: "v2" #Change version number e.g to 'v3' when updating application
+      - gcr/build-image:
+          image: client-app
           tag: "v2" #Change version number e.g to 'v3' when updating application
       - gcr/push-image:
-          image: circle-gke
+          image: server-app
           tag: "v2" #Change version number e.g to 'v3' when updating application
+      - gcr/push-image:
+          image: client-app
+          tag: "v2" #Change version number e.g to 'v3' when updating application          
 
   deploy:
     description: Deploy application to Google Kubernetes Engine
@@ -127,9 +133,13 @@ jobs:
       - gcp-gke/init
       # Update a deployment Docker image.
       - gcp-gke/rollout-image:
-          deployment: circle-ci-cluster
-          container: dominic-backend
-          image: gcr.io/circle-ci-demo/circle-gke:v2 # change version when updating
+          deployment: real-world-cluster
+          container: app-backend
+          image: europe-southwest1-docker.pkg.dev/${GOOGLE_PROJECT_ID}/real-world-repo/server-app:v2 # change version when updating
+      - gcp-gke/rollout-image:
+          deployment: real-world-cluster
+          container: app-frontend
+          image: europe-southwest1-docker.pkg.dev/${GOOGLE_PROJECT_ID}/real-world-repo/client-app:v2 # change version when updating   
 workflows:
   test_coverage_build_update_deploy::
     jobs:

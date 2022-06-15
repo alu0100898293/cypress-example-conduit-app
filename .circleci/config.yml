@@ -160,7 +160,9 @@ workflows:
       - merge-coverage:
           requires:
             - cypress/run
-      - build
+      - build:
+          requires:
+            - merge-coverage
       - Build-Push-Image-Docker:
           requires:
             - build
